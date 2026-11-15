@@ -2553,6 +2553,7 @@ dependencies = [
  "craft-crw",
  "craft-metadata",
  "craft-tiff",
+ "image",
  "jpeg-encoder 0.7.1",
  "jxl-oxide",
  "miniz_oxide 0.9.1",
