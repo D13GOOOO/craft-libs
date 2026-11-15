@@ -185,18 +185,19 @@ mod tests {
     use super::*;
 
     #[test]
-    fn calibration_defaults_and_rejects_bad_rational() {
+    fn calibration_defaults_and_rejects_bad_rational() -> Result<()> {
         let empty = Ifd::default();
         let tiff = Tiff { data: &[], big_endian: false };
         let metadata = Metadata { tiff, main: &empty, raw: &empty };
-        let calibration = metadata.calibration().unwrap();
+        let calibration = metadata.calibration()?;
         assert_eq!(calibration.baseline_exposure, 0.0);
         assert_eq!(calibration.color_matrix, [None, None]);
 
         // IFD with one BaselineExposure SRational pointing past the end of the file.
         let data = [b'I', b'I', 42, 0, 8, 0, 0, 0, 1, 0, 42, 198, 10, 0, 1, 0, 0, 0, 200, 0, 0, 0, 0, 0, 0, 0];
-        let (tiff, first) = Tiff::new(&data).unwrap();
-        let (ifd, _) = tiff.read_ifd(first, 0).unwrap();
+        let (tiff, first) = Tiff::new(&data)?;
+        let (ifd, _) = tiff.read_ifd(first, 0)?;
         assert!(Metadata { tiff, main: &ifd, raw: &ifd }.calibration().is_err());
+        Ok(())
     }
 }
